@@ -1,5 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+
+// Add the Bootstrap framework for CSS styling
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import CreateTodo from './components/create-todo.component';
@@ -33,8 +35,8 @@ class App extends React.Component {
         <br />
 
       <Route path='/' exact component={TodoList} />
-      <Route path='/edit/:id' component={EditTodo} />
-      <Route path='/create' component={CreateTodo} />
+      <Route path='/edit/:id' exact component={EditTodo} />
+      <Route path='/create' exact component={CreateTodo} />
       </div>
 
       </Router>

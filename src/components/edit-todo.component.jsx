@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default class EditTodo extends React.Component {
+class EditTodo extends React.Component {
   render() {
     return (
       <div>
@@ -9,3 +9,6 @@ export default class EditTodo extends React.Component {
     )
   }
 }
+
+
+export default EditTodo;
