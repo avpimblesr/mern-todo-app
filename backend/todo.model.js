@@ -14,7 +14,7 @@ let Todo = new Schema({
     type: String
   },
   
-  todo_conpleted: {
+  todo_completed: {
     type: Boolean
   },
   
