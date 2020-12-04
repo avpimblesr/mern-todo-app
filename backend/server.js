@@ -1,14 +1,15 @@
 const express = require('express');
-const app = express();
 const cors = require('cors');
 const mongoose = require('mongoose');
-const todoRoutes = express.Router();
-const PORT = 4000;
-
 let Todo = require('./todo.model');
+const todoRoutes = express.Router();
+const PORT = 4001;
+
+const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use('/todos', todoRoutes)
 
 mongoose.connect('mongodb://127.0.0.1:27017/todos', {
   useNewUrlParser: true,
@@ -20,11 +21,13 @@ connection.once('open', function () {
   console.log("MongoDB database connection established successfully");
 })
 
+// Setup the routing
 todoRoutes.route('/').get(function (req, res) {
   Todo.find(function (err, todos) {
     if (err) {
       console.log(err);
-    } else {
+    }
+    else {
       res.json(todos);
     }
   });
@@ -37,16 +40,28 @@ todoRoutes.route('/:id').get(function (req, res) {
   });
 });
 
+todoRoutes.route('/add').post(function (req, res) {
+  let todo = new Todo(req.body);
+  todo.save()
+  .then(todo => {
+    res.status(200).json({ 'todo': 'todo added successfully' });
+  })
+  .catch(err => {
+    res.status(400).send('adding new todo failed');
+  });
+});
+
 todoRoutes.route('/update/:id').post(function (req, res) {
   Todo.findById(req.params.id, function (err, todo) {
-    if (!todo)
+    if (!todo) {
       res.status(404).send("data is not found");
-    else
+    }
+    else {
       todo.todo_description = req.body.todo_description;
-    todo.todo_responsible = req.body.todo_responsible;
-    todo.todo_priority = req.body.todo_priority;
-    todo.todo_completed = req.body.todo_completed;
-
+      todo.todo_responsible = req.body.todo_responsible;
+      todo.todo_priority = req.body.todo_priority;
+      todo.todo_completed = req.body.todo_completed;
+    }
     todo.save().then(todo => {
       res.json('Todo updated!');
     })
@@ -56,19 +71,6 @@ todoRoutes.route('/update/:id').post(function (req, res) {
   });
 });
 
-todoRoutes.route('/add').post(function (req, res) {
-  let todo = new Todo(req.body);
-  todo.save()
-    .then(todo => {
-      res.status(200).json({ 'todo': 'todo added successfully' });
-    })
-    .catch(err => {
-      res.status(400).send('adding new todo failed');
-    });
-});
 
-app.use('/todos', todoRoutes);
 
-app.listen(PORT, function () {
-  console.log("Server is running on Port: " + PORT);
-});
+app.listen(PORT, () => console.log(`Server is running on Port: ${PORT}`));
