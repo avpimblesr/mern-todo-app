@@ -20,8 +20,9 @@ class EditTodo extends React.Component {
   }
 
   componentDidMount() {
-    axios.get('http://localhost:4001/todos' + this.props.match.params.id)
+    axios.get('http://localhost:4001/todos/' + this.props.match.params.id)
       .then(response => {
+        console.log("componentDidMount",response)
         this.setState({
           todo_description: response.data.todo_description,
           todo_responsible: response.data.todo_responsible,
@@ -83,7 +84,7 @@ class EditTodo extends React.Component {
             <input type="text"
               className="form-control"
               value={this.state.todo_description}
-              onChange={this.onChangeTodoDescripion}
+              onChange={this.onChangeTodoDescription}
             />
           </section>
 

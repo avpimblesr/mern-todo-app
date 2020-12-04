@@ -1,12 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import '../index.css'
 
 const Todo = props => (
   <tr>
-    <td>{props.todo.todo_description}</td>
-    <td>{props.todo.todo_responsible}</td>
-    <td>{props.todo.todo_priority}</td>
+    <td className={props.todo.todo_completed ? 'completed' : ''}>{props.todo.todo_description}</td>
+    <td className={props.todo.todo_completed ? 'completed' : ''}>{props.todo.todo_responsible}</td>
+    <td className={props.todo.todo_completed ? 'completed' : ''}>{props.todo.todo_priority}</td>
     <td>
       <Link to={`/edit/${props.todo._id}`}>Edit</Link>
     </td>
@@ -29,6 +30,12 @@ class TodosList extends React.Component {
       .catch(function (error) {
         console.log(error);
       })
+  }
+
+  componentDidUpdate() {
+    axios.get('http://localhost:4001/todos/')
+      .then(response => { this.setState({ todos: response.data }) })
+      .catch(function (error) {console.log(error)})
   }
 
   todoList() {
